@@ -1,15 +1,4 @@
-import { mainnet } from "wagmi/chains";
-import { CHAIN_ID } from "@/constants/env";
-
-const useRegisterEvent = () => {
-  return (name, data) => {
-    if (CHAIN_ID !== mainnet.id) return;
-    fetch("/api/events", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, data }),
-    });
-  };
-};
+// Vercel Analytics removido. Mantido como no-op para não mexer nos call sites.
+const useRegisterEvent = () => () => {};
 
 export default useRegisterEvent;

@@ -1,7 +1,7 @@
 {
   "name": "@obvious/camp-monorepo",
   "engines": {
-    "node": "22.x"
+    "node": ">=22"
   },
   "scripts": {
     "build": "turbo build",

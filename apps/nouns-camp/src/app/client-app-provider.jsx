@@ -1,6 +1,5 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
 import React from "react";
 import { I18nProvider } from "react-aria";
 import { useAccount, useReconnect } from "wagmi";
@@ -34,17 +33,6 @@ const WalletReconnector = () => {
   }, [isConnected, reconnect, connectors]);
 };
 
-const SentryConfigurator = () => {
-  const { address } = useAccount();
-  React.useEffect(() => {
-    if (address == null) {
-      Sentry.setUser(null);
-      return;
-    }
-    Sentry.setUser({ id: address });
-  }, [address]);
-};
-
 export default function ClientAppProvider({ children }) {
   return (
     <I18nProvider locale="en-US">
@@ -57,7 +45,6 @@ export default function ClientAppProvider({ children }) {
               {children}
               <GlobalClientFetcher />
               <WalletReconnector />
-              <SentryConfigurator />
             </CommandPaletteProvider>
           </GlobalDialogsProvider>
         </ConnectWalletDialogProvider>

@@ -1,9 +1,9 @@
 import { readFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import webpack from "webpack";
-import { withSentryConfig } from "@sentry/nextjs";
 import serwist from "@serwist/next";
 
 // `next lint` runs this file
@@ -52,35 +52,19 @@ const withSerwist = serwist({
   disable: process.env.NODE_ENV !== "production",
 });
 
-const withSentry = (config) =>
-  withSentryConfig(
-    config,
-    {
-      // silent: true, // Suppresses source map uploading logs during build
-      org: "camp",
-      project: "camp-main",
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-    },
-    {
-      // Upload a larger set of source maps for prettier stack traces (increases build time)
-      widenClientFileUpload: true,
-      // Transpiles SDK to be compatible with IE11 (increases bundle size)
-      transpileClientSDK: true,
-      // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-      tunnelRoute: "/monitoring",
-      // Hides source maps from generated client bundles
-      hideSourceMaps: true,
-      // Automatically tree-shake Sentry logger statements to reduce bundle size
-      disableLogger: true,
-      // Enables automatic instrumentation of Vercel Cron Monitors.
-      // See the following for more information:
-      // https://docs.sentry.io/product/crons/
-      // https://vercel.com/docs/cron-jobs
-      automaticVercelMonitors: true,
-    },
-  );
-
-const BUILD_ID = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "dev";
+const BUILD_ID = (() => {
+  if (process.env.VERCEL_GIT_COMMIT_SHA != null)
+    return process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7);
+  try {
+    return execSync("git rev-parse --short HEAD", {
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .toString()
+      .trim();
+  } catch {
+    return "dev";
+  }
+})();
 const APP_HOST = (() => {
   if (process.env.APP_HOST != null) return process.env.APP_HOST;
   if (process.env.VERCEL == null && !isLintJob)
@@ -106,63 +90,59 @@ const ignoredModules = [
   "encoding",
 ];
 
-export default withSentry(
-  withSerwist({
-    reactStrictMode: true,
-    compiler: {
-      emotion: true,
-    },
-    rewrites() {
-      return [
-        { source: "/topics/:path*", destination: "/candidates/:path*" },
-        { source: "/sw.js", destination: "/service-worker.js" },
-        {
-          source: "/subgraphs/nouns",
-          destination: process.env.NOUNS_SUBGRAPH_URL,
-        },
-        {
-          source: "/subgraphs/propdates",
-          destination: process.env.PROPDATES_SUBGRAPH_URL,
-        },
-        {
-          source: "/subgraphs/flows",
-          destination: process.env.FLOWS_SUBGRAPH_URL,
-        },
-      ];
-    },
-    headers() {
-      return [
-        {
-          source: "/:path*",
-          headers: [{ key: "x-camp-build-id", value: BUILD_ID }],
-        },
-      ];
-    },
-    webpack(config) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        ...Object.fromEntries(ignoredModules.map((m) => [m, false])),
-      };
+export default withSerwist({
+  reactStrictMode: true,
+  compiler: {
+    emotion: true,
+  },
+  rewrites() {
+    // Subgraphs sem URL configurada (ex.: FLOWS) não geram rewrite
+    const subgraphRewrites = [
+      ["/subgraphs/nouns", process.env.NOUNS_SUBGRAPH_URL],
+      ["/subgraphs/propdates", process.env.PROPDATES_SUBGRAPH_URL],
+      ["/subgraphs/flows", process.env.FLOWS_SUBGRAPH_URL],
+    ]
+      .filter(([, destination]) => destination?.trim())
+      .map(([source, destination]) => ({ source, destination }));
 
-      config.plugins = [
-        ...config.plugins,
-        new webpack.DefinePlugin({
-          "process.env.BUILD_ID": JSON.stringify(BUILD_ID),
-          "process.env.APP_HOST": JSON.stringify(APP_HOST),
-          "process.env.APP_PRODUCTION_URL": JSON.stringify(APP_PRODUCTION_URL),
-        }),
-      ];
+    return [
+      { source: "/topics/:path*", destination: "/candidates/:path*" },
+      { source: "/sw.js", destination: "/service-worker.js" },
+      ...subgraphRewrites,
+    ];
+  },
+  headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "x-camp-build-id", value: BUILD_ID }],
+      },
+    ];
+  },
+  webpack(config) {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      ...Object.fromEntries(ignoredModules.map((m) => [m, false])),
+    };
 
-      return config;
-    },
-    turbopack: {
-      // Ignoring modules is not a thing yet
-      resolveAlias: Object.fromEntries(
-        ignoredModules.map((n) => [
-          n,
-          { browser: "@shades/common/empty-module" },
-        ]),
-      ),
-    },
-  }),
-);
+    config.plugins = [
+      ...config.plugins,
+      new webpack.DefinePlugin({
+        "process.env.BUILD_ID": JSON.stringify(BUILD_ID),
+        "process.env.APP_HOST": JSON.stringify(APP_HOST),
+        "process.env.APP_PRODUCTION_URL": JSON.stringify(APP_PRODUCTION_URL),
+      }),
+    ];
+
+    return config;
+  },
+  turbopack: {
+    // Ignoring modules is not a thing yet
+    resolveAlias: Object.fromEntries(
+      ignoredModules.map((n) => [
+        n,
+        { browser: "@shades/common/empty-module" },
+      ]),
+    ),
+  },
+});

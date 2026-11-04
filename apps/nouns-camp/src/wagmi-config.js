@@ -17,6 +17,9 @@ import { getChain } from "@/utils/chains";
 
 const chain = getChain(CHAIN_ID);
 
+const walletConnectProjectId =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID?.trim() || null;
+
 export const getJsonRpcUrl = (chainId) => {
   const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL?.trim();
   if (rpcUrl && chainId === CHAIN_ID) {
@@ -47,10 +50,11 @@ export const config = createConfig({
   syncConnectedChain: false,
   chains: [chain],
   connectors: [
-    walletConnect({
-      projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID,
-    }),
-    coinbaseWallet({ appName: "Nouns Camp" }),
+    // WalletConnect só entra se houver project ID (Reown Cloud, gratuito)
+    ...(walletConnectProjectId
+      ? [walletConnect({ projectId: walletConnectProjectId })]
+      : []),
+    coinbaseWallet({ appName: "Nouns TV Camp" }),
     safe(),
     injected(),
   ],

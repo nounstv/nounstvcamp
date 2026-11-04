@@ -33,7 +33,6 @@ import {
 } from "@/components/auction-dialog";
 import AccountAvatar from "@/components/account-avatar";
 import LogoSymbol from "@/components/logo-symbol";
-import Banner from "@/components/banner";
 import { formatEther } from "viem";
 import useTreasuryData from "@/hooks/treasury-data";
 import useEnsName from "@/hooks/ens-name";
@@ -70,11 +69,6 @@ const Layout = ({
     }
     {...props}
   >
-    <Banner>
-      <div style={{ flex: 1, textAlign: "center" }}>
-        Camp will be sunset on September 30, 2026.
-      </div>
-    </Banner>
     <NavBar navigationStack={navigationStack} actions={actions} />
     {scrollView ? (
       <div
@@ -527,6 +521,23 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
                     >
                       {isTestnet ? chain.name : "Camp"}
                     </span>
+                    {!isTestnet && (
+                      <span
+                        css={(t) =>
+                          css({
+                            display: "none",
+                            "@media(min-width: 600px)": {
+                              display: "inline",
+                              marginLeft: "0.5rem",
+                              color: t.colors.textDimmed,
+                              fontSize: t.text.sizes.small,
+                            },
+                          })
+                        }
+                      >
+                        by Nouns TV
+                      </span>
+                    )}
                   </>
                 ),
               };

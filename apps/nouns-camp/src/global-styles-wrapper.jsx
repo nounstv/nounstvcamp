@@ -60,6 +60,13 @@ const GlobalStyles = ({ children }) => {
             body: {
               fontFamily: t.fontStacks.default,
             },
+            // Títulos com a fonte da marca (Londrina Solid). O peso 400 da
+            // Londrina já é "bold"; evita o fallback sintético para 900.
+            "h1, h2, h3": {
+              fontFamily: t.fontStacks.headers,
+              fontWeight: "400",
+              letterSpacing: "0.01em",
+            },
           })
         }
       />

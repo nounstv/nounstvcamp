@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import Script from "next/script";
-import { get as getConfig } from "@vercel/edge-config";
-import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
+import { Inter, Londrina_Solid } from "next/font/google";
 import { getSession } from "@/utils/session";
 import EmotionRootStyleRegistry from "@/app/emotion-style-root-registry";
 import { getStateFromCookie as getWagmiStateFromCookie } from "@/wagmi-config";
@@ -22,7 +21,19 @@ import "@/index.css";
 
 import "@/snow.css";
 
-const isProduction = process.env.NODE_ENV === "production";
+// Fontes da marca Nouns TV: Londrina Solid para títulos, Inter para o resto.
+// Self-hosted pelo next/font (sem request para o Google em runtime).
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+const londrina = Londrina_Solid({
+  subsets: ["latin"],
+  weight: ["300", "400", "900"],
+  variable: "--font-londrina",
+  display: "swap",
+});
 
 const title = metaConfig.appTitle;
 const description = metaConfig.appDescription;
@@ -81,30 +92,28 @@ const beforeInteractive = () => {
   }
 };
 
-const fetchConfig = async () => {
-  try {
-    const [canaryAccounts = [], betaAccounts = []] = await Promise.all([
-      getConfig("canary-accounts"),
-      getConfig("beta-accounts"),
-    ]);
-    return { canaryAccounts, betaAccounts };
-  } catch (e) {
-    console.error(e);
-    return { canaryAccounts: [], betaAccounts: [] };
-  }
-};
+// Antes vinha do Vercel Edge Config. Agora é uma lista opcional de endereços
+// (separados por vírgula) nas variáveis de ambiente do servidor.
+const parseAccountList = (value) =>
+  (value ?? "")
+    .split(",")
+    .map((a) => a.trim().toLowerCase())
+    .filter(Boolean);
+
+const fetchConfig = async () => ({
+  canaryAccounts: parseAccountList(process.env.CAMP_CANARY_ACCOUNTS),
+  betaAccounts: parseAccountList(process.env.CAMP_BETA_ACCOUNTS),
+});
 
 export default async function RootLayout({ children }) {
   const [session, config] = await Promise.all([getSession(), fetchConfig()]);
   return (
     <html lang="en">
-      <body>
+      <body className={`${inter.variable} ${londrina.variable}`}>
         <Script
           id="load-theme"
           strategy="beforeInteractive"
         >{`(${beforeInteractive})()`}</Script>
-
-        {isProduction && <VercelAnalytics />}
 
         <EmotionRootStyleRegistry>
           <ConfigProvider config={config}>
