@@ -72,7 +72,8 @@ export default async function sitemap() {
     }));
 
     candidateEntries = candidates.map((c) => ({
-      url: `${base}/candidates/${makeCandidateUrlId(c.id)}`,
+      // slugs podem ter &, |, : etc.; codificar evita XML inválido e bate com os links do app
+      url: `${base}/candidates/${encodeURIComponent(makeCandidateUrlId(c.id))}`,
       lastModified: toDate(c.lastUpdatedTimestamp ?? c.createdTimestamp),
       changeFrequency: "weekly",
       priority: 0.5,
