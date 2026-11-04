@@ -4,9 +4,12 @@ Contrato: **Nouns Client Incentives Rewards** (proxy)
 `0x883860178F95d0C82413eDc1D6De530cB4771d55` — implementação `0xaaF173E6b65aa4473C830EDB402D26B7A33c5E94`.
 
 Carteira dona do client: `0x72396daD00b9ED4591bE8F829EB62997eD16608c` (Nouns TV).
-Simulado em 04/11/2026: `registerClient` cunha o **clientId 41** (~200 k gas, sem valor).
+**Registrado em 04/11/2026.** A carteira assinou duas vezes, então a Nouns TV é dona de dois
+clients idênticos: **41** (usado pelo Camp) e **42** (reserva; pode ser renomeado com
+`updateClientMetadata(42, nome, descrição)` para outra superfície da Nouns TV, ex. a news).
+Tx do 42: `0xf7d8c1983f3fe3e19f78da93879fffa57e4c475ff917caf664bd84d3af6ffd7b`.
 
-## 1. Registrar (uma vez, assinado pela carteira da Nouns TV)
+## 1. Registrar (feito; fica como referência)
 
 **Pela Etherscan:** `https://etherscan.io/address/0x883860178F95d0C82413eDc1D6De530cB4771d55#writeProxyContract`
 → Connect to Web3 com `0x7239…608c` → `registerClient`:
@@ -26,7 +29,7 @@ O evento `ClientRegistered` da transação confirma o id. O NFT do client fica n
 
 ## 2. Ligar o id no Camp
 
-Vercel › nounstvcamp › Environment Variables: `NEXT_PUBLIC_CAMP_CLIENT_ID=41` (production, preview, development) e redeploy.
+Vercel › nounstvcamp › Environment Variables: `NEXT_PUBLIC_CAMP_CLIENT_ID=41` (production, preview, development), gravado em 04/11/2026; entra no bundle no próximo build.
 A partir daí votos, propostas e lances enviados pelo Camp carregam o id.
 
 ## 3. Como as recompensas acumulam (parâmetros lidos na chain em 04/11/2026)
