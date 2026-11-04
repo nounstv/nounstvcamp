@@ -400,14 +400,11 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
       case "open-flows":
         window.open("https://flows.wtf", "_blank");
         break;
-      case "open-camp-discord":
-        window.open("https://discord.gg/kXjMV8kTnk", "_blank");
+      case "open-nouns-tv":
+        window.open("https://nounstv.com", "_blank");
         break;
       case "open-camp-github":
-        window.open(
-          "https://github.com/obvious-inc/frontend-monorepo/tree/main/apps/nouns-camp",
-          "_blank",
-        );
+        window.open("https://github.com/nounstv/nounstvcamp", "_blank");
         break;
       case "navigate-to-auction":
         navigate("/auction");
@@ -782,8 +779,8 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
                 children: [
                   { id: "open-settings-dialog", title: "Settings" },
                   {
-                    id: "open-camp-discord",
-                    title: "Discord",
+                    id: "open-nouns-tv",
+                    title: "Nouns TV",
                     iconRight: <span>{"\u2197"}</span>,
                   },
                   {
