@@ -27,6 +27,8 @@ Licença GPL-3.0, mantida. Histórico Git completo preservado (remotes `upstream
   (`/api/news-summary/[proposalId]` faz proxy de `newsapi.nounstv.com`, cache 10 min;
   player em `components/proposal-audio-summary.jsx`). `NOUNS_TV_NEWS_API_URL` opcional.
 - Flows (flows.wtf) removido.
+- SEO: `robots.txt` (libera tudo menos /api e /new) e `sitemap.xml` com páginas fixas + todas as
+  propostas e candidatas do subgraph (revalida a cada hora); canonical sem `?` vazio.
 
 ## Infra necessária (tudo free tier)
 

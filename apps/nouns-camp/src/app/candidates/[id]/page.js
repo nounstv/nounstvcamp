@@ -105,7 +105,8 @@ export async function generateMetadata(props) {
 
   const description = stringUtils.truncate(220, firstRegularParagraph);
 
-  const canonicalUrl = `${metaConfig.canonicalAppBasename}/candidates/${candidateId}?${urlSearchParams}`;
+  const canonicalQuery = urlSearchParams.toString();
+  const canonicalUrl = `${metaConfig.canonicalAppBasename}/candidates/${candidateId}${canonicalQuery ? `?${canonicalQuery}` : ""}`;
 
   const firstImage = markdownUtils.getFirstImage(body ?? "");
 
