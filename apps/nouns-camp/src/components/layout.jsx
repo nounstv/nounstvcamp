@@ -389,9 +389,6 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
       case "copy-account-address":
         navigator.clipboard.writeText(userAccountAddress);
         break;
-      case "open-flows":
-        window.open("https://flows.wtf", "_blank");
-        break;
       case "open-nouns-tv":
         window.open("https://nounstv.com", "_blank");
         break;
@@ -696,11 +693,6 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
                   {
                     id: "open-nouns-tv-news",
                     title: "Nouns TV News",
-                    iconRight: <span>{"\u2197"}</span>,
-                  },
-                  {
-                    id: "open-flows",
-                    title: "Flows",
                     iconRight: <span>{"\u2197"}</span>,
                   },
                 ],

@@ -96,11 +96,10 @@ export default withSerwist({
     emotion: true,
   },
   rewrites() {
-    // Subgraphs sem URL configurada (ex.: FLOWS) não geram rewrite
+    // Subgraphs sem URL configurada não geram rewrite
     const subgraphRewrites = [
       ["/subgraphs/nouns", process.env.NOUNS_SUBGRAPH_URL],
       ["/subgraphs/propdates", process.env.PROPDATES_SUBGRAPH_URL],
-      ["/subgraphs/flows", process.env.FLOWS_SUBGRAPH_URL],
     ]
       .filter(([, destination]) => destination?.trim())
       .map(([source, destination]) => ({ source, destination }));
