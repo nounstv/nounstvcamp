@@ -22,6 +22,10 @@ Licença GPL-3.0, mantida. Histórico Git completo preservado (remotes `upstream
 - Menu: Nouns TV e Nouns TV News em "External"; GitHub aponta para nounstv/nounstvcamp.
 - Ícones, apple-icon e OG/Twitter image (1200×630) com a marca Nouns TV. Título/OG: "Nouns TV Camp".
 - Banner de sunset removido.
+- Página da proposta mostra o **resumo em áudio** gerado pela Nouns TV News
+  (`/api/news-summary/[proposalId]` faz proxy de `newsapi.nounstv.com`, cache 10 min;
+  player em `components/proposal-audio-summary.jsx`). `NOUNS_TV_NEWS_API_URL` opcional.
+- Flows (flows.wtf) removido.
 
 ## Infra necessária (tudo free tier)
 

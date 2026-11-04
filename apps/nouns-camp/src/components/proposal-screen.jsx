@@ -70,6 +70,7 @@ import useMatchDesktopLayout from "@/hooks/match-desktop-layout";
 import useRecentAuctionProceeds from "@/hooks/recent-auction-proceeds";
 import { useCollection as useDrafts } from "@/hooks/drafts";
 import Layout, { MainContentContainer } from "@/components/layout";
+import ProposalAudioSummary from "@/components/proposal-audio-summary";
 import ProposalStateTag from "@/components/proposal-state-tag";
 import AccountPreviewPopoverTrigger from "@/components/account-preview-popover-trigger";
 import NounPreviewPopoverTrigger from "@/components/noun-preview-popover-trigger";
@@ -1000,6 +1001,8 @@ const ProposalMainSection = ({ proposalId, scrollContainerRef }) => {
                 );
               })()}
             />
+
+            <ProposalAudioSummary proposalId={proposalId} />
             {isDesktopLayout ? (
               <ProposalBody markdownText={proposal.body} />
             ) : (
