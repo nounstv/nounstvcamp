@@ -33,7 +33,7 @@ Licença GPL-3.0, mantida. Histórico Git completo preservado (remotes `upstream
 |---|---|
 | Subgraphs `nouns-mainnet` e `nouns-propdates` | Goldsky, públicos (já no `.env.template`) |
 | RPC Ethereum | `NEXT_PUBLIC_RPC_URL` (publicnode no dev) ou Alchemy free |
-| WalletConnect | Reown Cloud project ID (opcional) |
+| WalletConnect | Reown project ID (opcional); em produção usa o projeto "nounstv" do dashboard.reown.com, o mesmo da nounstvweb, com camp.nounstv.com no allowlist |
 | Etherscan / Tenderly | opcionais: decodificação de contratos / simulação de props |
 | Hospedagem | Vercel Hobby (Next.js 15, Node ≥ 22) |
 
