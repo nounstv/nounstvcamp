@@ -18,7 +18,9 @@ Licença GPL-3.0, mantida. Histórico Git completo preservado (remotes `upstream
 - `BUILD_ID` sai do `git rev-parse` quando não está na Vercel.
 - Tema Nouns TV em `apps/nouns-camp/src/theme.js`: Londrina Solid em títulos, Inter no resto
   (via `next/font`), vermelho da marca (`#e40536`, hue 347) como primária, fundo escuro `#0a0a0a`.
-- Navegação: "Camp · by Nouns TV". Título/OG: "Nouns TV Camp".
+- Navegação: noggles Nouns TV + "Camp · by Nouns TV" em todas as páginas; botão de tema claro/escuro na barra.
+- Menu: Nouns TV e Nouns TV News em "External"; GitHub aponta para nounstv/nounstvcamp.
+- Ícones, apple-icon e OG/Twitter image (1200×630) com a marca Nouns TV. Título/OG: "Nouns TV Camp".
 - Banner de sunset removido.
 
 ## Infra necessária (tudo free tier)

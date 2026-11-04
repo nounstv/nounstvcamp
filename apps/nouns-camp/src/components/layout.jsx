@@ -1,5 +1,5 @@
 import React from "react";
-import { css, keyframes } from "@emotion/react";
+import { css } from "@emotion/react";
 import NextLink from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { invariant } from "@shades/common/utils";
@@ -32,19 +32,11 @@ import {
   useNounImageDataUri,
 } from "@/components/auction-dialog";
 import AccountAvatar from "@/components/account-avatar";
-import LogoSymbol from "@/components/logo-symbol";
+import NounsTvLogo from "@/components/nouns-tv-logo";
+import ThemeToggleButton from "@/components/theme-toggle-button";
 import { formatEther } from "viem";
 import useTreasuryData from "@/hooks/treasury-data";
 import useEnsName from "@/hooks/ens-name";
-
-const flipAnimation = keyframes({
-  "0%,52%,100%": {
-    transform: "rotate3d(1,1,1,0deg)",
-  },
-  "2%, 50%": {
-    transform: "rotate3d(0.4,1,0,180deg)",
-  },
-});
 
 const Layout = ({
   scrollContainerRef,
@@ -403,6 +395,9 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
       case "open-nouns-tv":
         window.open("https://nounstv.com", "_blank");
         break;
+      case "open-nouns-tv-news":
+        window.open("https://news.nounstv.com", "_blank");
+        break;
       case "open-camp-github":
         window.open("https://github.com/nounstv/nounstvcamp", "_blank");
         break;
@@ -487,129 +482,55 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
       >
         {[
           (() => {
-            const logo = (
-              <LogoSymbol
-                css={css({
-                  display: "inline-block",
-                  width: "1.8rem",
-                  height: "auto",
-                  backfaceVisibility: "hidden",
-                })}
-                style={{
-                  filter: isTestnet ? "invert(1)" : undefined,
-                }}
-              />
-            );
-
-            if (pathname !== "/")
-              return {
-                to: "/",
-                label: (
-                  <>
-                    {logo}
-                    <span
-                      css={css({
-                        display: "none",
-                        "@media(min-width: 600px)": {
-                          display: "inline",
-                          marginLeft: "0.6rem",
-                        },
-                      })}
-                    >
-                      {isTestnet ? chain.name : "Camp"}
-                    </span>
-                    {!isTestnet && (
-                      <span
-                        css={(t) =>
-                          css({
-                            display: "none",
-                            "@media(min-width: 600px)": {
-                              display: "inline",
-                              marginLeft: "0.5rem",
-                              color: t.colors.textDimmed,
-                              fontSize: t.text.sizes.small,
-                            },
-                          })
-                        }
-                      >
-                        by Nouns TV
-                      </span>
-                    )}
-                  </>
-                ),
-              };
-
-            // Different behavior based on current location
             const isRoot = pathname === "/";
-            // Check if there are any search parameters
             const hasSearchParams = searchParams.size > 0;
-
             return {
               key: "root-logo",
               to: "/",
-              // Use replace prop when on root with search params to not add to history stack
+              // Na raiz com query, replace para não empilhar histórico
               replace: hasSearchParams && isRoot ? true : undefined,
-              props: {
-                style: {
-                  height: "2.8rem",
-                  minWidth: "2.8rem",
-                  paddingBlock: 0,
-                  perspective: "200vmax",
-                },
-              },
               label: (
                 <>
-                  <div
+                  <NounsTvLogo
                     css={css({
-                      position: "relative",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      width: "1.8rem",
-                      height: "1.8rem",
-                      animation: `${flipAnimation} 24s linear 12s infinite`,
-                      transition: "0.25s transform ease-out",
-                      transformStyle: "preserve-3d",
-                      svg: { display: "block" },
-                      "@media(hover: hover)": {
-                        "&:hover": {
-                          animation: "none",
-                        },
-                      },
+                      display: "block",
+                      width: "3.4rem",
+                      height: "auto",
+                      flexShrink: 0,
                     })}
+                    style={{
+                      filter: isTestnet ? "grayscale(1)" : undefined,
+                    }}
+                  />
+                  <span
+                    css={(t) =>
+                      css({
+                        marginLeft: "0.7rem",
+                        fontFamily: t.fontStacks.headers,
+                        fontSize: "1.9rem",
+                        lineHeight: 1,
+                        letterSpacing: "0.02em",
+                        transform: "translateY(0.1rem)",
+                      })
+                    }
                   >
-                    {logo}
-                    <div
-                      css={css({
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        backfaceVisibility: "hidden",
-                        transform:
-                          "translateX(-50%) translateY(-50%) rotate3d(0.4,1,0,180deg)",
-                        width: "2.4rem",
-                        height: "2.4rem",
-                        svg: {
-                          display: "block",
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: "0.3rem",
-                        },
-                      })}
-                    >
-                      <NoggleImage />
-                    </div>
-                  </div>
-                  {isTestnet && (
+                    {isTestnet ? chain.name : "Camp"}
+                  </span>
+                  {!isTestnet && (
                     <span
-                      css={css({
-                        display: "none",
-                        "@media(min-width: 600px)": {
-                          display: "inline",
-                          marginLeft: "0.6rem",
-                        },
-                      })}
+                      css={(t) =>
+                        css({
+                          display: "none",
+                          "@media(min-width: 600px)": {
+                            display: "inline",
+                            marginLeft: "0.5rem",
+                            color: t.colors.textDimmed,
+                            fontSize: t.text.sizes.small,
+                          },
+                        })
+                      }
                     >
-                      {chain.name}
+                      by Nouns TV
                     </span>
                   )}
                 </>
@@ -709,8 +630,9 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
       >
         <ul>
           {[
+            { key: "theme-toggle", component: ThemeToggleButton },
             ...actions,
-            actions.length > 0 && { type: "separator" },
+            { type: "separator" },
             connectedWalletAccountAddress == null
               ? {
                   onSelect: () => {
@@ -767,6 +689,16 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
                 title: "External",
                 children: [
                   {
+                    id: "open-nouns-tv",
+                    title: "Nouns TV",
+                    iconRight: <span>{"\u2197"}</span>,
+                  },
+                  {
+                    id: "open-nouns-tv-news",
+                    title: "Nouns TV News",
+                    iconRight: <span>{"\u2197"}</span>,
+                  },
+                  {
                     id: "open-flows",
                     title: "Flows",
                     iconRight: <span>{"\u2197"}</span>,
@@ -778,11 +710,6 @@ const NavBar = ({ navigationStack, actions: customActions }) => {
                 title: "Camp",
                 children: [
                   { id: "open-settings-dialog", title: "Settings" },
-                  {
-                    id: "open-nouns-tv",
-                    title: "Nouns TV",
-                    iconRight: <span>{"\u2197"}</span>,
-                  },
                   {
                     id: "open-camp-github",
                     title: "GitHub",
@@ -1019,55 +946,5 @@ const AuctionNounImage = (props) => {
   if (imageDataUri == null) return <div {...props} />;
   return <img src={imageDataUri} {...props} />;
 };
-
-const NoggleImage = () => (
-  <svg
-    fill="none"
-    width="160"
-    height="60"
-    shapeRendering="crispEdges"
-    viewBox="0 0 160 60"
-  >
-    <g fill="#d53c5e">
-      <path d="m90 0h-60v10h60z" />
-      <path d="m160 0h-60v10h60z" />
-      <path d="m40 10h-10v10h10z" />
-    </g>
-    <path d="m60 10h-20v10h20z" fill="#fff" />
-    <path d="m80 10h-20v10h20z" fill="#000" />
-    <path d="m90 10h-10v10h10z" fill="#d53c5e" />
-    <path d="m110 10h-10v10h10z" fill="#d53c5e" />
-    <path d="m130 10h-20v10h20z" fill="#fff" />
-    <path d="m150 10h-20v10h20z" fill="#000" />
-    <path d="m160 10h-10v10h10z" fill="#d53c5e" />
-    <path d="m40 20h-40v10h40z" fill="#d53c5e" />
-    <path d="m60 20h-20v10h20z" fill="#fff" />
-    <path d="m80 20h-20v10h20z" fill="#000" />
-    <path d="m110 20h-30v10h30z" fill="#d53c5e" />
-    <path d="m130 20h-20v10h20z" fill="#fff" />
-    <path d="m150 20h-20v10h20z" fill="#000" />
-    <path d="m160 20h-10v10h10z" fill="#d53c5e" />
-    <path d="m10 30h-10v10h10z" fill="#d53c5e" />
-    <path d="m40 30h-10v10h10z" fill="#d53c5e" />
-    <path d="m60 30h-20v10h20z" fill="#fff" />
-    <path d="m80 30h-20v10h20z" fill="#000" />
-    <path d="m90 30h-10v10h10z" fill="#d53c5e" />
-    <path d="m110 30h-10v10h10z" fill="#d53c5e" />
-    <path d="m130 30h-20v10h20z" fill="#fff" />
-    <path d="m150 30h-20v10h20z" fill="#000" />
-    <path d="m160 30h-10v10h10z" fill="#d53c5e" />
-    <path d="m10 40h-10v10h10z" fill="#d53c5e" />
-    <path d="m40 40h-10v10h10z" fill="#d53c5e" />
-    <path d="m60 40h-20v10h20z" fill="#fff" />
-    <path d="m80 40h-20v10h20z" fill="#000" />
-    <path d="m90 40h-10v10h10z" fill="#d53c5e" />
-    <path d="m110 40h-10v10h10z" fill="#d53c5e" />
-    <path d="m130 40h-20v10h20z" fill="#fff" />
-    <path d="m150 40h-20v10h20z" fill="#000" />
-    <path d="m160 40h-10v10h10z" fill="#d53c5e" />
-    <path d="m90 50h-60v10h60z" fill="#d53c5e" />
-    <path d="m160 50h-60v10h60z" fill="#d53c5e" />
-  </svg>
-);
 
 export default Layout;

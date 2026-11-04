@@ -9,6 +9,6 @@ export default {
   canonicalAppBasename: `https://${APP_HOST}`,
   openGraphType: "website",
   openGraphSiteName: APP_HOST,
-  twitterCard: "summary",
+  twitterCard: "summary_large_image",
   appleWebAppStatusBarStyle: "default",
 };
