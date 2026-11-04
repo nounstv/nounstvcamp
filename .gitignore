@@ -13,3 +13,6 @@ CLAUDE.md
 .opencode
 
 **/.claude/settings.local.json
+
+# valores para colar na dashboard da Vercel (contém segredo)
+.env.vercel
