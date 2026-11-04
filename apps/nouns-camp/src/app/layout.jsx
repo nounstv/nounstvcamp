@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import Script from "next/script";
 import { Inter, Londrina_Solid } from "next/font/google";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { getSession } from "@/utils/session";
 import EmotionRootStyleRegistry from "@/app/emotion-style-root-registry";
 import { getStateFromCookie as getWagmiStateFromCookie } from "@/wagmi-config";
@@ -144,6 +145,8 @@ export default async function RootLayout({ children }) {
             </CacheStoreProvider>
           </ConfigProvider>
         </EmotionRootStyleRegistry>
+        {/* Vercel Web Analytics (page views). No-op fora da Vercel/produção. */}
+        <VercelAnalytics />
       </body>
     </html>
   );

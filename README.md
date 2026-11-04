@@ -11,7 +11,8 @@ Licença GPL-3.0, mantida. Histórico Git completo preservado (remotes `upstream
 
 ## O que mudou em relação ao Camp original
 
-- Sem Vercel Edge Config, Vercel Analytics e Sentry. Erros vão para o console; eventos são no-op.
+- Sem Vercel Edge Config e Sentry. Erros vão para o console; eventos customizados são no-op.
+  Vercel Web Analytics (page views) ligado via `<Analytics />` no layout.
 - Contas canary/beta vêm de `CAMP_CANARY_ACCOUNTS` / `CAMP_BETA_ACCOUNTS` (lista de endereços).
 - WalletConnect é opcional: sem `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` o conector não é registrado.
 - Subgraph sem URL (ex.: `FLOWS_SUBGRAPH_URL`) não gera rewrite.
